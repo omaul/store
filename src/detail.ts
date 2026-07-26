@@ -8,6 +8,7 @@ import { el } from './dom';
 import { state, forViewport } from './state';
 import { contactHref } from './contact';
 import { setBackBtn } from './panels';
+import { mountGallery } from './gallery';
 import type { Product } from './types';
 
 const OPEN_MS = { mobile: 200, desktop: 300 };
@@ -50,6 +51,9 @@ export function openDetail(code: string, tile: HTMLElement): void {
   state.activeTile = tile;
 
   fillDetail(p);
+  // до замера высоты: у изделия с одним кадром управления слайдером нет, и
+  // место под него отводить не нужно
+  mountGallery(tile, p);
 
   // высоту описания меряем заранее, чтобы отвести под него место
   el.detail.style.top = '-9999px';

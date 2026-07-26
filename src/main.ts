@@ -9,6 +9,8 @@ import { renderFilters, setFilter } from './filters';
 import { openDetail } from './detail';
 import { openInfo } from './info';
 import { closePanels } from './panels';
+import { initGallery, showFrame, consumeSwipe } from './gallery';
+import { revealWhenReady } from './boot';
 
 // ── события ────────────────────────────────────────────────
 
@@ -23,9 +25,10 @@ el.filters.addEventListener('click', (e) => {
 });
 
 el.grid.addEventListener('click', (e) => {
-  // пока изделие открыто, любой клик по сетке отъезжает обратно
+  // пока изделие открыто, любой клик по сетке отъезжает обратно — кроме клика,
+  // которым закончился свайп по слайдеру
   if (state.openCode) {
-    closePanels();
+    if (!consumeSwipe()) closePanels();
     return;
   }
   if (!(e.target instanceof Element)) return;
@@ -47,6 +50,9 @@ el.footer.addEventListener('click', (e) => {
 
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closePanels();
+  if (!state.openCode) return;
+  if (e.key === 'ArrowLeft') showFrame(-1);
+  if (e.key === 'ArrowRight') showFrame(1);
 });
 
 // размеры посчитаны от вьюпорта, поэтому при ресайзе просто отъезжаем
@@ -64,7 +70,11 @@ MOBILE_Q.addEventListener('change', (e) => {
 
 el.contactBtn.href = contactHref(null);
 el.footerContact.href = contactHref(null);
-el.footerContact.textContent = CONTACT.telegram ? 'Telegram' : 'Почта';
+el.footerContact.textContent = CONTACT.telegram ? 'TELEGRAM' : 'ПОЧТА';
 
+initGallery();
 renderFilters();
 renderGrid();
+
+// последним: ждёт шрифт и фото первого ряда, которые создал renderGrid
+revealWhenReady();

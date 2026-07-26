@@ -1,20 +1,27 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" class="is-booting">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>BRASS</title>
-  <meta name="description" content="Кольца ручной работы из латуни">
-  <meta property="og:title" content="BRASS">
-  <meta property="og:description" content="Кольца ручной работы из латуни">
+  <title>РАЯ ДРАГА</title>
+  <meta name="description" content="Украшения ручной работы из латуни">
+  <meta property="og:title" content="РАЯ ДРАГА">
+  <meta property="og:description" content="Украшения ручной работы из латуни">
   <meta property="og:type" content="website">
 
   <meta name="robots" content="noai, noimageai">
-  <meta name="copyright" content="© 2026 Иван Баширов (BRASS), все права защищены">
+  <meta name="copyright" content="© 2026 Рая Драга, все права защищены">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <!-- Контент скрыт, пока не приедут шрифт и фото первого ряда: иначе видно, как
+       подписи перескакивают с системного моно на Plex, а плитки хлопают по одной.
+       Класс снимает boot.ts, он же страхует таймаутом. Правило живёт здесь, а не
+       в style.css: в дев-режиме бандл CSS приезжает через JS и опаздывает.
+       Скрыт именно main — сообщение из <noscript> должно остаться видимым. -->
+  <style>html.is-booting main { opacity: 0 }</style>
 </head>
 <body>
   <main>
@@ -48,19 +55,26 @@
 
       <footer class="footer">
         <ul>
-          <!-- «О мастерской», «Размеры» и «Доставка» вернутся, когда будут
+          <!-- «Об авторе», «Размеры» и «Доставка» вернутся, когда будут
                настоящие тексты; заготовки лежат в src/products.ts -->
-          <li><a href="#" data-info="care">Уход за латунью</a></li>
-          <li><a href="#" data-info="rights">Права</a></li>
-          <li><a id="footer-contact" href="#" target="_blank" rel="noopener">Контакты</a></li>
+          <li><a href="#" data-info="care">УХОД ЗА ЛАТУНЬЮ</a></li>
+          <li><a href="#" data-info="rights">ПРАВА</a></li>
+          <li><a id="footer-contact" href="#" target="_blank" rel="noopener">КОНТАКТЫ</a></li>
         </ul>
-        <p class="footer-copy">© 2026 BRASS. Фотографии и тексты защищены авторским правом</p>
+        <p class="footer-copy">© 2026 Рая Драга. Фотографии и тексты защищены авторским правом</p>
       </footer>
     </div>
 
     <!-- Описание изделия. Фото здесь нет специально: увеличивается сам тайл
          в сетке, а не открывается его копия — иначе картинка мигает. -->
     <section id="detail" class="detail" aria-hidden="true">
+      <!-- слайдер: сами кадры лежат в тайле сетки, здесь только управление -->
+      <div id="gallery" class="gallery" hidden>
+        <button id="gallery-prev" class="gallery-btn" type="button" aria-label="Предыдущее фото">←</button>
+        <p id="gallery-count" class="gallery-count" aria-live="polite"></p>
+        <button id="gallery-next" class="gallery-btn" type="button" aria-label="Следующее фото">→</button>
+      </div>
+
       <p id="detail-code" class="detail-code"></p>
       <p id="detail-name" class="detail-name"></p>
       <dl id="detail-specs" class="specs"></dl>

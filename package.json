@@ -3,7 +3,7 @@
     "version": "0.0.0",
     "private": true,
     "type": "module",
-    "description": "Витрина колец ручной работы из латуни",
+    "description": "Витрина украшений ручной работы из латуни",
     "scripts": {
         "start": "vite --open",
         "dev": "vite",

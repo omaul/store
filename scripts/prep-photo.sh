@@ -3,10 +3,9 @@ set -eu
 
 # Готовит снимок для витрины: ресайз до 1200 px по длинной стороне и копирайт
 # в метаданные. Оригинал не меняется, его держим в originals/ (вне git).
-#   ./scripts/prep-photo.sh originals/DSC_0413.jpg r-13
+#   ./scripts/prep-photo.sh originals/DSC_0413.jpg roza/05
 
-HOLDER='Иван Баширов'
-BRAND='BRASS'
+HOLDER='Рая Драга'
 # Уходит в XMP WebStatement каждого снимка, поэтому ссылка нужна долгоживущая:
 # адрес витрины сменится вместе с названием и доменом, а этот файл — нет.
 SITE='https://github.com/omaul/store/blob/main/LICENSE-CONTENT'
@@ -20,9 +19,9 @@ fi
 [ -f "$src" ] || { echo "нет файла: $src" >&2; exit 1; }
 
 root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
-out="$root/public/assets/rings/$name.jpg"
+out="$root/public/assets/items/$name.jpg"
 year=$(date +%Y)
-notice="© $year $BRAND ($HOLDER). Все права защищены."
+notice="© $year $HOLDER. Все права защищены."
 terms='Копирование, перепубликация, коммерческое использование и использование для обучения моделей машинного обучения запрещены без письменного разрешения правообладателя.'
 
 sips -s format jpeg -s formatOptions 85 -Z 1200 "$src" --out "$out" >/dev/null

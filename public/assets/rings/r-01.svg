@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="1000" height="1000">
-<defs><linearGradient id="b" x1="0.067" y1="0.250" x2="0.933" y2="0.750"><stop offset="0" stop-color="#7d5f1e"/><stop offset="0.18" stop-color="#c9a53f"/><stop offset="0.34" stop-color="#f2e0a6"/><stop offset="0.5" stop-color="#b8912f"/><stop offset="0.66" stop-color="#e8cd7d"/><stop offset="0.84" stop-color="#9a7626"/><stop offset="1" stop-color="#6b4f18"/></linearGradient></defs>
-<circle cx="500" cy="520" r="300" fill="none" stroke="url(#b)" stroke-width="78"/>
-<circle cx="500" cy="520" r="337.0" fill="none" stroke="#00000026" stroke-width="3"/>
-<circle cx="500" cy="520" r="264.0" fill="none" stroke="#0000003d" stroke-width="5"/>
-<ellipse cx="500" cy="185" rx="150" ry="115" fill="url(#b)" stroke="#00000026" stroke-width="3"/>
-</svg>

@@ -8,100 +8,168 @@
 import type { Contact, Filter, InfoPage, Product } from './types';
 
 // Куда ведёт кнопка «написать» (иконка справа вверху и кнопка в карточке).
+// Телеграм приоритетнее почты: пока он заполнен, email не используется.
 export const CONTACT: Contact = {
-  // ↓ подставь свой телеграм; если его нет — оставь пустую строку и заполни email
-  telegram: 'https://t.me/username',
-  email: 'mail@example.com',
+  telegram: 'https://t.me/raya_draga',
+  email: '',
 };
 
 // Фильтры в шапке. id из cats у изделий, 'all' — показать всё.
+// НОВОЕ и С КАМНЕМ закомментированы: пока ни у кого нет таких cats, а фильтр с
+// пустой сеткой выглядит поломкой. Раскомментируй, когда будет что показать.
 export const FILTERS: Filter[] = [
   { id: 'all', label: 'ВСЁ' },
-  { id: 'new', label: 'НОВОЕ' },
+  // { id: 'new', label: 'НОВОЕ' },
   { id: 'signet', label: 'ПЕЧАТКИ' },
   { id: 'band', label: 'ОБОДКИ' },
-  { id: 'stone', label: 'С КАМНЕМ' },
+  { id: 'figure', label: 'ФИГУРНЫЕ' },
+  { id: 'pendant', label: 'КУЛОНЫ' },
+  { id: 'cuff', label: 'КАФЫ' },
+  // { id: 'stone', label: 'С КАМНЕМ' },
 ];
 
 // Изделия. Порядок в массиве = порядок в сетке.
-// Фото кладём в public/assets/rings/ и указываем путь без public.
+//
+// Фото лежат в public/assets/items/<изделие>/, путь пишется без public. Первый
+// кадр из photos стоит в сетке, остальные листаются стрелками в карточке —
+// порядок задаётся здесь, а не именами файлов.
+//
+// sizes и note оставлены пустыми строками: это места под текст, пустое поле на
+// сайт не выводится совсем. Выдуманного здесь быть не должно, поэтому лучше
+// пустая строка, чем правдоподобная.
 export const PRODUCTS: Product[] = [
   {
-    code: 'BR-01', name: 'ОБРАЗЕЦ 01', cats: ['new', 'signet'],
-    img: 'assets/rings/r-01.svg',
-    material: 'ЛАТУНЬ, ПОЛИРОВКА', sizes: '16—21', price: null,
-    note: 'Литьё по выплавляемой модели, ручная доводка.',
+    code: 'BR-01', name: 'АБСТРАКЦИЯ', cats: ['band'],
+    photos: [
+      'assets/items/abstraktsiya/abstraktsiya-front.jpg',
+      'assets/items/abstraktsiya/abstraktsiya-side.jpg',
+    ],
+    material: 'ЛАТУНЬ', sizes: '', price: null,
+    note: '',
   },
   {
-    code: 'BR-02', name: 'ОБРАЗЕЦ 02', cats: ['new', 'band'],
-    img: 'assets/rings/r-02.svg',
-    material: 'ЛАТУНЬ', sizes: '15—22', price: null,
+    code: 'BR-02', name: 'ГАЕЧКА', cats: ['band'],
+    photos: ['assets/items/gaechka/gaechka-top.jpg'],
+    material: 'ЛАТУНЬ', sizes: '', price: null,
+    note: '',
   },
   {
-    code: 'BR-03', name: 'ОБРАЗЕЦ 03', cats: ['band'],
-    img: 'assets/rings/r-03.svg',
-    material: 'ЛАТУНЬ', sizes: '16—21', price: null,
-    note: 'Витая шина, кручение вручную.',
+    // draga-pendant.jpg лежит в папке, но не в слайдере: это версия-кулон,
+    // отдельное изделие, если решишь его выставить
+    code: 'BR-03', name: 'ДРАГА', cats: ['band'],
+    photos: [
+      'assets/items/draga/draga-front.jpg',
+      'assets/items/draga/draga-top.jpg',
+      'assets/items/draga/draga-sketch.jpg',
+    ],
+    material: 'ЛАТУНЬ', sizes: '', price: null,
+    note: '',
   },
   {
-    code: 'BR-04', name: 'ОБРАЗЕЦ 04', cats: ['new', 'band'],
-    img: 'assets/rings/r-04.svg',
-    material: 'ЛАТУНЬ, ФАКТУРА МОЛОТКА', sizes: '16—22', price: null,
+    code: 'BR-04', name: 'ЗВЕЗДА', cats: ['figure'],
+    photos: ['assets/items/zvezda/zvezda-front.jpg'],
+    material: 'ЛАТУНЬ', sizes: '', price: null,
+    note: '',
   },
   {
-    code: 'BR-05', name: 'ОБРАЗЕЦ 05', cats: ['stone'],
-    img: 'assets/rings/r-05.svg',
-    material: 'ЛАТУНЬ, ТОПАЗ', sizes: '16—19', price: null,
+    code: 'BR-05', name: 'ЗВЁЗДОЧКА', cats: ['pendant'],
+    photos: [
+      'assets/items/zvezdochka/zvezdochka-chain.jpg',
+      'assets/items/zvezdochka/zvezdochka-worn.jpg',
+      'assets/items/zvezdochka/zvezdochka-hand.jpg',
+    ],
+    material: 'ЛАТУНЬ', sizes: '', price: null,
+    note: '',
   },
   {
-    code: 'BR-06', name: 'ОБРАЗЕЦ 06', cats: ['band'],
-    img: 'assets/rings/r-06.svg',
-    material: 'ЛАТУНЬ', sizes: '15—20', price: null,
+    code: 'BR-06', name: 'ЗИГЗАГ', cats: ['band'],
+    photos: [
+      'assets/items/zigzag/zigzag-angle.jpg',
+      'assets/items/zigzag/zigzag-front.jpg',
+    ],
+    material: 'ЛАТУНЬ', sizes: '', price: null,
+    note: '',
   },
   {
-    code: 'BR-07', name: 'ОБРАЗЕЦ 07', cats: ['band'],
-    img: 'assets/rings/r-07.svg',
-    material: 'ЛАТУНЬ', sizes: '17—22', price: null,
+    code: 'BR-07', name: 'КАФ', cats: ['cuff'],
+    photos: ['assets/items/kaf/kaf-front.jpg'],
+    material: 'ЛАТУНЬ', sizes: '', price: null,
+    note: '',
   },
   {
-    code: 'BR-08', name: 'ОБРАЗЕЦ 08', cats: ['new', 'band'],
-    img: 'assets/rings/r-08.svg',
-    material: 'ЛАТУНЬ', sizes: '16—21', price: null,
+    code: 'BR-08', name: 'КВАДРАТЫ', cats: ['signet'],
+    photos: [
+      'assets/items/kvadraty/kvadraty-row.jpg',
+      'assets/items/kvadraty/kvadraty-top.jpg',
+      'assets/items/kvadraty/kvadraty-top-2.jpg',
+    ],
+    material: 'ЛАТУНЬ', sizes: '', price: null,
+    note: '',
   },
   {
-    code: 'BR-09', name: 'ОБРАЗЕЦ 09', cats: ['signet'],
-    img: 'assets/rings/r-09.svg',
-    material: 'ЛАТУНЬ, РУЧНАЯ ГРАВИРОВКА', sizes: '17—22', price: null,
-    note: 'Рисунок обсуждается отдельно.',
+    code: 'BR-09', name: 'КОЖА', cats: ['band'],
+    photos: ['assets/items/kozha/kozha-front.jpg'],
+    material: 'ЛАТУНЬ', sizes: '', price: null,
+    note: '',
   },
   {
-    code: 'BR-10', name: 'ОБРАЗЕЦ 10', cats: ['band'],
-    img: 'assets/rings/r-10.svg',
-    material: 'ЛАТУНЬ', sizes: '16—21', price: null,
+    code: 'BR-10', name: 'РОЗА', cats: ['figure'],
+    photos: [
+      'assets/items/roza/roza-front.jpg',
+      'assets/items/roza/roza-side.jpg',
+      'assets/items/roza/roza-malachite.jpg',
+      'assets/items/roza/roza-wax.jpg', // восковая модель до литья
+    ],
+    material: 'ЛАТУНЬ', sizes: '', price: null,
+    note: '',
   },
   {
-    code: 'BR-11', name: 'ОБРАЗЕЦ 11', cats: ['new', 'band'],
-    img: 'assets/rings/r-11.svg',
-    material: 'ЛАТУНЬ', sizes: 'БЕЗРАЗМЕРНОЕ', price: null,
+    code: 'BR-11', name: 'СЕРДЦЕ', cats: ['band'],
+    photos: [
+      'assets/items/serdce/serdce-front.jpg',
+      'assets/items/serdce/serdce-set.jpg',
+    ],
+    material: 'ЛАТУНЬ', sizes: '', price: null,
+    note: '',
   },
   {
-    code: 'BR-12', name: 'ОБРАЗЕЦ 12', cats: ['signet'],
-    img: 'assets/rings/r-12.svg',
-    material: 'ЛАТУНЬ', sizes: '17—22', price: null,
+    code: 'BR-12', name: 'СНЕЖИНКА', cats: ['figure'],
+    photos: ['assets/items/snezhinka/snezhinka-pair.jpg'],
+    material: 'ЛАТУНЬ', sizes: '', price: null,
+    note: '',
+  },
+  {
+    code: 'BR-13', name: 'СОЛНЦЕ', cats: ['figure'],
+    photos: ['assets/items/solnce/solnce-worn.jpg'],
+    material: 'ЛАТУНЬ', sizes: '', price: null,
+    note: '',
+  },
+  {
+    code: 'BR-14', name: 'УШНОЙ КАФ', cats: ['cuff'],
+    photos: [
+      'assets/items/ushnoy-kaf/ushnoy-kaf-ear.jpg',
+      'assets/items/ushnoy-kaf/ushnoy-kaf-hand.jpg',
+    ],
+    material: 'ЛАТУНЬ', sizes: '', price: null,
+    note: '',
   },
 ];
+
+// Кадры из папки «комната» и раскладки по нескольку изделий сразу лежат в
+// assets/items/lookbook/ — отдельного изделия на них нет, поэтому в сетку и в
+// слайдеры они не идут. Ждут страницы или обложки.
 
 // Тексты страниц из футера. Ключи совпадают с data-info у ссылок в index.html.
 // Пустой text — заготовка: ссылки на такие страницы в футере закомментированы,
 // пока не появится настоящий текст. Выдуманного на сайте быть не должно.
 export const INFO = {
   about: {
-    title: 'О МАСТЕРСКОЙ',
+    title: 'ОБ АВТОРЕ',
     text: '',
   },
   care: {
     title: 'УХОД ЗА ЛАТУНЬЮ',
-    text: 'Латунь со временем темнеет — это нормально и обратимо. Достаточно протереть кольцо мягкой тканью с полиролью или содой с лимонным соком, и блеск вернётся. Снимайте кольцо перед контактом с бытовой химией.',
+    text: 'Латунь со временем темнеет — это нормально и обратимо. Достаточно протереть украшение мягкой тканью с полиролью или содой с лимонным соком, и блеск вернётся. Снимайте украшения перед контактом с бытовой химией.',
   },
   sizes: {
     title: 'РАЗМЕРЫ',
@@ -113,7 +181,7 @@ export const INFO = {
   },
   rights: {
     title: 'ПРАВА НА КОНТЕНТ',
-    text: 'Фотографии, тексты и дизайн изделий на этом сайте — мои. Их нельзя копировать и перепубликовывать, использовать в рекламе, в оформлении товаров на продажу или для обучения моделей машинного обучения без моего письменного разрешения. Это касается и самих моделей колец: форма и отделка тоже авторские. Если хочется где-то использовать снимок или упомянуть мастерскую — напишите, обычно я не против. Правообладатель — Иван Баширов, мастерская BRASS. Код сайта открыт под лицензией MIT, на контент она не распространяется.',
+    text: 'Фотографии, тексты и дизайн изделий на этом сайте — мои. Их нельзя копировать и перепубликовывать, использовать в рекламе, в оформлении товаров на продажу или для обучения моделей машинного обучения без моего письменного разрешения. Это касается и самих моделей: форма и отделка тоже авторские. Если хочется где-то использовать снимок или упомянуть меня — напишите, обычно я не против. Правообладатель — Рая Драга. Код сайта открыт под лицензией MIT, на контент она не распространяется.',
   },
 } satisfies Record<string, InfoPage>;
 

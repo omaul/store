@@ -61,6 +61,9 @@ main {
   flex-direction: column;
   align-items: flex-start;
   overflow: hidden;
+  /* появление первого экрана; до этого main скрыт правилом html.is-booting из
+     index.html, класс снимает boot.ts */
+  transition: opacity 250ms ease-out;
 }
 
 nav {
@@ -285,12 +288,23 @@ nav {
   aspect-ratio: 1;
 }
 
+/* Кадры слайдера лежат друг на друге в одном тайле и переключаются
+   прозрачностью. Скрытый кадр помечен классом, а не наоборот: если стили
+   приедут с задержкой (в дев-режиме CSS приходит через JS), тайл покажет
+   картинку, а не пустой квадрат. */
 .square img {
   position: absolute;
   inset: 0;
   height: 100%;
   width: 100%;
   object-fit: contain;
+  transition: opacity 200ms ease-in-out;
+}
+
+/* is-hidden — не текущий кадр слайдера, is-blank — кадр ещё не загрузился */
+.square img.is-hidden,
+.square img.is-blank {
+  opacity: 0;
 }
 
 .product-label {
@@ -397,6 +411,44 @@ main:has(.info-panel[aria-hidden='false']) .footer {
   visibility: hidden;
   opacity: 0;
   transition: opacity 120ms ease-in, visibility 0s 120ms;
+}
+
+/* Слайдер: сами кадры в сетке, здесь только стрелки и счётчик. hidden сам по
+   себе display:flex не переспорит, поэтому гасим правилом. */
+.gallery {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 0.35rem;
+}
+
+.gallery[hidden] {
+  display: none;
+}
+
+.gallery-btn {
+  padding: 0.25rem 0.75rem;
+  font-size: 1rem;
+  color: #343434;
+  opacity: 0.7;
+  transition: opacity 0.3s;
+}
+
+.gallery-btn:focus-visible {
+  opacity: 1;
+}
+
+@media (hover: hover) {
+  .gallery-btn:hover {
+    opacity: 1;
+  }
+}
+
+.gallery-count {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: #343434;
+  opacity: 0.5;
 }
 
 .detail-code {

@@ -1,5 +1,6 @@
 import { el } from './dom';
 import { state, forViewport } from './state';
+import { resetGallery } from './gallery';
 
 const CLOSE_MS = { mobile: 100, desktop: 300 };
 
@@ -33,10 +34,13 @@ export function closePanels(): boolean {
     state.activeTile = null;
   }
 
-  // origin возвращаем в центр только после отъезда, иначе сетку дёрнет
+  // origin и кадр слайдера возвращаем только после отъезда, иначе сетку дёрнет,
+  // а подмена кадра на лид будет видна в анимации
   window.clearTimeout(state.resetOriginTimer);
   state.resetOriginTimer = window.setTimeout(() => {
-    if (!state.openCode) el.grid.style.transformOrigin = '50% 50%';
+    if (state.openCode) return;
+    el.grid.style.transformOrigin = '50% 50%';
+    resetGallery();
   }, closeMs);
 
   el.scroll.style.overflowY = '';
