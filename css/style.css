@@ -1,44 +1,521 @@
-:root {
-  --bg: #ffffff;
-  --fg: #1a1a1a;
-  --muted: #6b7280;
-}
+/* ── база ─────────────────────────────────────────────────── */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #14161a;
-    --fg: #f2f3f5;
-    --muted: #9aa1ab;
-  }
-}
-
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
+  border: none;
 }
 
+html,
 body {
   margin: 0;
-  min-height: 100vh;
+  font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco,
+    Consolas, 'Liberation Mono', 'Courier New', monospace;
+  font-variant-numeric: normal;
+  font-feature-settings: 'zero' 0;
+  font-size: 16px;
+  background: #fff;
+  color: #000;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Фокус видно везде — иначе с клавиатуры по сайту не пройти.
+   Только :focus-visible, чтобы рамка не выскакивала на клик мышью.
+   Элементы, приглушённые через opacity, доводятся до 1 в своих секциях:
+   иначе рамка наследует их прозрачность и её не видно. */
+:focus-visible {
+  outline: 2px solid #000;
+  outline-offset: 3px;
+}
+
+img {
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.no-scroll-bar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scroll-bar::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── каркас ───────────────────────────────────────────────── */
+
+.fhs {
+  height: 100dvh;
+}
+
+main {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  width: 100vw;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  overflow: hidden;
+  background: #fff;
+  color: #000;
+}
+
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99;
+  display: flex;
+  height: 6rem;
+  max-height: 6rem;
+  width: 100%;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: hidden;
+  padding-block: 0.75rem;
+  background: #fff;
+}
+
+.nav-placeholder {
+  height: 6rem;
+  width: 100%;
+  flex: none;
+}
+
+.nav-left,
+.nav-right {
+  position: absolute;
+  top: 0.5rem;
+  z-index: 10;
+  display: flex;
+  height: 3rem;
+  align-items: center;
+}
+
+.nav-left {
+  left: 1rem;
+}
+
+.nav-right {
+  right: 1rem;
+}
+
+.scroll-area {
+  position: relative;
+  display: flex;
+  width: 100%;
+  flex: 1;
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+/* ── кнопка масштаба (она же «назад») ─────────────────────── */
+
+.zoom-btn {
+  position: relative;
+  display: flex;
+  height: 3rem;
+  width: 1rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.zoom-btn .line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s;
+}
+
+.zoom-btn .line i {
+  display: block;
+  height: 2px;
+  width: 1rem;
+  border-radius: 999px;
+  background: #000;
+  transition: transform 0.3s;
+}
+
+.zoom-btn[data-state='menu'] .line-1 { transform: translateY(-3px); }
+.zoom-btn[data-state='menu'] .line-2 { transform: translateY(3px); }
+
+.zoom-btn[data-state='back'] .line-1 { transform: translateY(-4px); }
+.zoom-btn[data-state='back'] .line-2 { transform: translateY(4px); }
+.zoom-btn[data-state='back'] .line-1 i { transform: rotate(-45deg) scaleX(0.72); }
+.zoom-btn[data-state='back'] .line-2 i { transform: rotate(45deg) scaleX(0.72); }
+
+.icon-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg);
-  color: var(--fg);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  opacity: 0.8;
+  transition: opacity 0.3s;
 }
 
-.page {
-  padding: 24px;
+.icon-btn:hover,
+.icon-btn:focus-visible {
+  opacity: 1;
+}
+
+.icon-btn svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* ── фильтры ──────────────────────────────────────────────── */
+
+.filters {
+  position: relative;
+  display: flex;
+  height: 100%;
+  flex: 1;
+  flex-wrap: wrap;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  gap: 0 1rem;
+  padding-inline: 4rem;
+}
+
+.filter-btn {
+  flex: none;
+  color: #343434;
+  opacity: 0.2;
+  transition: opacity 0.3s;
+  white-space: nowrap;
+}
+
+.filter-btn[aria-pressed='true'],
+.filter-btn:focus-visible {
+  opacity: 1;
+}
+
+@media (hover: hover) {
+  .filter-btn:hover {
+    opacity: 0.6;
+  }
+  .filter-btn[aria-pressed='true']:hover {
+    opacity: 1;
+  }
+}
+
+/* ── сетка изделий ────────────────────────────────────────── */
+
+.product-grid {
+  --col-count: 6;
+  --tx: 0px;
+  --ty: 0px;
+  --scale: 1;
+  --duration: 300ms;
+  --opacity: 1;
+
+  position: relative;
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(var(--col-count), minmax(0, 1fr));
+  gap: 1rem;
+  padding-inline: 1rem;
+  justify-content: center;
+  justify-items: center;
+  transform: translateX(var(--tx)) translateY(var(--ty)) scale(var(--scale));
+  transform-origin: 50% 50%;
+  opacity: var(--opacity);
+  transition: transform var(--duration) linear, opacity var(--duration) ease-in-out;
+  will-change: transform;
+  touch-action: pan-y;
+}
+
+.product-item {
+  display: flex;
+  width: min(500px, 100%);
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: opacity var(--duration) ease-in-out;
+}
+
+/* открытое изделие: увеличивается сам тайл, остальные гаснут */
+.product-grid.is-open .product-item { opacity: 0.1; }
+.product-grid.is-open.single-col .product-item { opacity: 0; }
+.product-grid.is-open .product-item.is-active { opacity: 1; }
+.product-grid.is-open .product-label { opacity: 0; }
+.product-grid.is-open .product-item:hover .product-image { transform: none; }
+
+.product-image {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s;
+}
+
+@media (hover: hover) {
+  .product-item:hover .product-image {
+    transform: scale(1.02);
+  }
+}
+
+.image-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.square {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 1;
+}
+
+.square img {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+}
+
+.product-label {
+  z-index: 10;
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
+  font-size: 1rem;
+  text-align: center;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: opacity 200ms ease-in-out;
+}
+
+/* ── футер ────────────────────────────────────────────────── */
+
+.footer {
+  position: relative;
+  display: flex;
+  min-height: 3rem;
+  width: 100%;
+  flex: none;
+  margin-top: auto;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.25rem 1.5rem;
+  transition: opacity 200ms ease-in-out, visibility 200ms;
+}
+
+/* Пока открыта любая панель, подвал убирается.
+   Он идёт в DOM после сетки, и оба position: relative без z-index — значит
+   подвал рисуется поверх наехавшего фото, а сквозь описание (у него нет фона)
+   просвечивает своим текстом: получается каша из наложенных строк.
+   visibility, а не только opacity, — чтобы ссылки ушли и из таб-порядка.
+   Размеры подвала при этом сохраняются, поэтому сетку не дёргает. */
+main:has(.detail[aria-hidden='false']) .footer,
+main:has(.info-panel[aria-hidden='false']) .footer {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.footer ul {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.footer a {
+  font-size: 0.8125rem;
+  color: #343434;
+  opacity: 0.55;
+  transition: opacity 0.3s;
+}
+
+.footer a:hover,
+.footer a:focus-visible {
+  opacity: 1;
+}
+
+/* ── описание изделия ─────────────────────────────────────── */
+/* Появляется под увеличенным фото. Позиция по вертикали ставится из JS —
+   ровно там, где заканчивается наехавший тайл. Анимации нет намеренно:
+   работает только наезд камеры, ничего не проявляется поверх. */
+
+.detail {
+  position: fixed;
+  left: 0;
+  z-index: 95;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 1.25rem 1rem 1.5rem;
   text-align: center;
 }
 
-.page h1 {
-  margin: 0 0 8px;
-  font-size: 32px;
+.detail[aria-hidden='true'] {
+  display: none;
 }
 
-.page p {
+.detail-code {
   margin: 0;
-  color: var(--muted);
+  font-size: 0.8125rem;
+  color: #343434;
+  opacity: 0.5;
+}
+
+.detail-name {
+  margin: 0;
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+.specs {
+  display: grid;
+  margin: 0.5rem 0 0;
+  grid-template-columns: auto auto;
+  justify-content: center;
+  gap: 0.25rem 1.5rem;
+  font-size: 0.8125rem;
+  text-align: left;
+}
+
+.specs dt {
+  color: #343434;
+  opacity: 0.5;
+}
+
+.specs dd {
+  margin: 0;
+}
+
+.detail-note {
+  margin: 0.5rem 0 0;
+  max-width: 34ch;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: #343434;
+}
+
+.detail-price {
+  margin: 1rem 0 0;
+  font-size: 1rem;
+}
+
+.cta {
+  margin-top: 0.5rem;
+  padding: 0.75rem 2rem;
+  border: 1px solid #000;
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  transition: background 0.2s, color 0.2s;
+}
+
+.cta:hover {
+  background: #000;
+  color: #fff;
+}
+
+/* текстовые страницы из футера */
+
+.info-panel {
+  position: fixed;
+  top: 6rem;
+  left: 0;
+  z-index: 95;
+  display: flex;
+  width: 100%;
+  height: calc(100dvh - 6rem);
+  align-items: flex-start;
+  justify-content: center;
+  overflow-y: auto;
+  padding: 0 1rem 2rem;
+  background: #fff;
+}
+
+.info-panel[aria-hidden='true'] {
+  display: none;
+}
+
+.info-body {
+  width: min(560px, 100%);
+  padding-top: 2rem;
+}
+
+.info-text {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  line-height: 1.75;
+  color: #343434;
+}
+
+/* ── мобильные ────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .product-grid {
+    --col-count: 3;
+  }
+
+  /* высота шапки продублирована в js/app.js → NAV_H.mobile */
+  nav { height: 5.5rem; max-height: 5.5rem; }
+  .nav-placeholder { height: 5.5rem; }
+  .info-panel { top: 5.5rem; height: calc(100dvh - 5.5rem); }
+
+  .nav-left { left: 0.5rem; }
+  .nav-right { right: 0.5rem; }
+
+  .filters {
+    padding-inline: 3rem;
+    gap: 0 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  .product-label {
+    font-size: 0.6875rem;
+  }
+
+  .footer {
+    padding: 1.5rem 0.25rem 2rem;
+  }
+
+  .footer ul {
+    gap: 0.125rem 0.5rem;
+  }
+
+  .detail {
+    gap: 0.3rem;
+    padding: 1rem 1rem 1.25rem;
+  }
+
+  .detail-note {
+    display: none; /* на телефоне под описание места нет */
+  }
 }
