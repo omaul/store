@@ -27,75 +27,77 @@ export const FILTERS: Filter[] = [
 // Фото кладём в public/assets/rings/ и указываем путь без public.
 export const PRODUCTS: Product[] = [
   {
-    code: 'BR-01', name: 'ПЕЧАТКА ОВАЛЬНАЯ', cats: ['new', 'signet'],
+    code: 'BR-01', name: 'ОБРАЗЕЦ 01', cats: ['new', 'signet'],
     img: 'assets/rings/r-01.svg',
     material: 'ЛАТУНЬ, ПОЛИРОВКА', sizes: '16—21', price: null,
     note: 'Литьё по выплавляемой модели, ручная доводка.',
   },
   {
-    code: 'BR-02', name: 'ОБОДОК ГЛАДКИЙ', cats: ['new', 'band'],
+    code: 'BR-02', name: 'ОБРАЗЕЦ 02', cats: ['new', 'band'],
     img: 'assets/rings/r-02.svg',
     material: 'ЛАТУНЬ', sizes: '15—22', price: null,
   },
   {
-    code: 'BR-03', name: 'ЖГУТ', cats: ['band'],
+    code: 'BR-03', name: 'ОБРАЗЕЦ 03', cats: ['band'],
     img: 'assets/rings/r-03.svg',
     material: 'ЛАТУНЬ', sizes: '16—21', price: null,
     note: 'Витая шина, кручение вручную.',
   },
   {
-    code: 'BR-04', name: 'КОВАНЫЙ', cats: ['new', 'band'],
+    code: 'BR-04', name: 'ОБРАЗЕЦ 04', cats: ['new', 'band'],
     img: 'assets/rings/r-04.svg',
     material: 'ЛАТУНЬ, ФАКТУРА МОЛОТКА', sizes: '16—22', price: null,
   },
   {
-    code: 'BR-05', name: 'С КАМНЕМ', cats: ['stone'],
+    code: 'BR-05', name: 'ОБРАЗЕЦ 05', cats: ['stone'],
     img: 'assets/rings/r-05.svg',
     material: 'ЛАТУНЬ, ТОПАЗ', sizes: '16—19', price: null,
   },
   {
-    code: 'BR-06', name: 'ТОНКИЙ', cats: ['band'],
+    code: 'BR-06', name: 'ОБРАЗЕЦ 06', cats: ['band'],
     img: 'assets/rings/r-06.svg',
     material: 'ЛАТУНЬ', sizes: '15—20', price: null,
   },
   {
-    code: 'BR-07', name: 'ШИРОКИЙ', cats: ['band'],
+    code: 'BR-07', name: 'ОБРАЗЕЦ 07', cats: ['band'],
     img: 'assets/rings/r-07.svg',
     material: 'ЛАТУНЬ', sizes: '17—22', price: null,
   },
   {
-    code: 'BR-08', name: 'ДВОЙНОЙ', cats: ['new', 'band'],
+    code: 'BR-08', name: 'ОБРАЗЕЦ 08', cats: ['new', 'band'],
     img: 'assets/rings/r-08.svg',
     material: 'ЛАТУНЬ', sizes: '16—21', price: null,
   },
   {
-    code: 'BR-09', name: 'ПЕЧАТКА С ГРАВИРОВКОЙ', cats: ['signet'],
+    code: 'BR-09', name: 'ОБРАЗЕЦ 09', cats: ['signet'],
     img: 'assets/rings/r-09.svg',
     material: 'ЛАТУНЬ, РУЧНАЯ ГРАВИРОВКА', sizes: '17—22', price: null,
     note: 'Рисунок обсуждается отдельно.',
   },
   {
-    code: 'BR-10', name: 'ГРАНЁНЫЙ', cats: ['band'],
+    code: 'BR-10', name: 'ОБРАЗЕЦ 10', cats: ['band'],
     img: 'assets/rings/r-10.svg',
     material: 'ЛАТУНЬ', sizes: '16—21', price: null,
   },
   {
-    code: 'BR-11', name: 'РАЗОМКНУТЫЙ', cats: ['new', 'band'],
+    code: 'BR-11', name: 'ОБРАЗЕЦ 11', cats: ['new', 'band'],
     img: 'assets/rings/r-11.svg',
     material: 'ЛАТУНЬ', sizes: 'БЕЗРАЗМЕРНОЕ', price: null,
   },
   {
-    code: 'BR-12', name: 'КУПОЛ', cats: ['signet'],
+    code: 'BR-12', name: 'ОБРАЗЕЦ 12', cats: ['signet'],
     img: 'assets/rings/r-12.svg',
     material: 'ЛАТУНЬ', sizes: '17—22', price: null,
   },
 ];
 
 // Тексты страниц из футера. Ключи совпадают с data-info у ссылок в index.html.
+// Пустой text — заготовка: ссылки на такие страницы в футере закомментированы,
+// пока не появится настоящий текст. Выдуманного на сайте быть не должно.
 export const INFO = {
   about: {
     title: 'О МАСТЕРСКОЙ',
-    text: 'Кольца делаю сам, вручную, небольшими партиями. Каждое изделие немного отличается от предыдущего — это латунь, а не штамповка.',
+    text: '',
   },
   care: {
     title: 'УХОД ЗА ЛАТУНЬЮ',
@@ -103,11 +105,11 @@ export const INFO = {
   },
   sizes: {
     title: 'РАЗМЕРЫ',
-    text: 'Размер — это внутренний диаметр кольца в миллиметрах. Измерьте кольцо, которое вам подходит, изнутри, либо оберните палец полоской бумаги и разделите длину на 3,14. Если сомневаетесь — напишите, подберём вместе.',
+    text: '',
   },
   delivery: {
     title: 'ДОСТАВКА',
-    text: 'Отправляю почтой и СДЭК по России. Срок изготовления под заказ — от одной недели. Готовые изделия отправляю в течение пары дней после оплаты.',
+    text: '',
   },
   rights: {
     title: 'ПРАВА НА КОНТЕНТ',
