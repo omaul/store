@@ -12,7 +12,9 @@ function visibleProducts(): Product[] {
 function createTile(p: Product): HTMLButtonElement {
   const img = document.createElement('img');
   img.src = p.img;
-  img.alt = p.code;
+  // alt пустой намеренно: код изделия уже произносится из aria-label кнопки и
+  // подписи под фото, иначе скринридер читает его трижды
+  img.alt = '';
   img.loading = 'lazy';
   img.decoding = 'async';
 
