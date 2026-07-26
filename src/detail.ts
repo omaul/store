@@ -36,7 +36,7 @@ function fillDetail(p: Product): void {
   el.detailNote.hidden = !p.note;
 
   el.detailPrice.textContent =
-    p.price === null ? 'ЦЕНА ПО ЗАПРОСУ' : p.price.toLocaleString('ru-RU') + ' ₽';
+    p.price === null ? 'ЦЕНА ПО\u00A0ЗАПРОСУ' : p.price.toLocaleString('ru-RU') + '\u00A0₽';
 
   el.detailCta.href = contactHref(p);
 }

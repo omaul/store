@@ -34,7 +34,7 @@ export interface Product {
 
 export interface InfoPage {
   title: string;
-  text: string;
+  text: readonly string[];
 }
 
 export interface Contact {

@@ -15,7 +15,11 @@ export function openInfo(key: string): void {
 
   state.openInfo = key;
   el.infoTitle.textContent = data.title;
-  el.infoText.textContent = data.text;
+  el.infoText.replaceChildren(...data.text.map((para) => {
+    const p = document.createElement('p');
+    p.textContent = para;
+    return p;
+  }));
 
   el.info.setAttribute('aria-hidden', 'false');
   el.scroll.style.overflowY = 'hidden';

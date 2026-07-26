@@ -548,6 +548,14 @@ main:has(.info-panel[aria-hidden='false']) .footer {
   color: #343434;
 }
 
+.info-text p {
+  margin: 0;
+}
+
+.info-text p + p {
+  margin-top: 1rem;
+}
+
 /* ── мобильные ────────────────────────────────────────────── */
 
 @media (max-width: 768px) {
