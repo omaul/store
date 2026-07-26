@@ -15,7 +15,7 @@ function needIn<T extends HTMLElement = HTMLElement>(selector: string): T {
 
 export const el = {
   nav: need('nav'),
-  zoomBtn: need<HTMLButtonElement>('zoom-btn'),
+  backBtn: need<HTMLButtonElement>('back-btn'),
   filters: need('filters'),
   scroll: needIn('.scroll-area'),
   grid: need('grid'),

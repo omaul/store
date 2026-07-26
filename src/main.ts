@@ -5,7 +5,6 @@ import { el } from './dom';
 import { state, MOBILE_Q } from './state';
 import { contactHref } from './contact';
 import { renderGrid } from './grid';
-import { applyZoom, setZoomIcon, stepZoom, syncViewport } from './zoom';
 import { renderFilters, setFilter } from './filters';
 import { openDetail } from './detail';
 import { openInfo } from './info';
@@ -13,9 +12,8 @@ import { closePanels } from './panels';
 
 // ── события ────────────────────────────────────────────────
 
-el.zoomBtn.addEventListener('click', () => {
-  if (closePanels()) return;
-  stepZoom();
+el.backBtn.addEventListener('click', () => {
+  closePanels();
 });
 
 el.filters.addEventListener('click', (e) => {
@@ -56,7 +54,11 @@ window.addEventListener('resize', () => {
   if (state.openCode) closePanels();
 });
 
-MOBILE_Q.addEventListener('change', (e) => syncViewport(e.matches));
+// isMobile влияет только на длительности анимации, число колонок задаёт CSS
+MOBILE_Q.addEventListener('change', (e) => {
+  state.isMobile = e.matches;
+  closePanels();
+});
 
 // ── старт ──────────────────────────────────────────────────
 
@@ -66,5 +68,3 @@ el.footerContact.textContent = CONTACT.telegram ? 'Telegram' : 'Почта';
 
 renderFilters();
 renderGrid();
-applyZoom();
-setZoomIcon();

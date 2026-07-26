@@ -7,7 +7,7 @@ import { PRODUCTS } from './products';
 import { el } from './dom';
 import { state, forViewport } from './state';
 import { contactHref } from './contact';
-import { setZoomIcon } from './zoom';
+import { setBackBtn } from './panels';
 import type { Product } from './types';
 
 const OPEN_MS = { mobile: 200, desktop: 300 };
@@ -83,5 +83,5 @@ export function openDetail(code: string, tile: HTMLElement): void {
   el.scroll.style.overflowY = 'hidden';
   el.detail.style.top = top + availH + 'px';
 
-  setZoomIcon();
+  setBackBtn();
 }

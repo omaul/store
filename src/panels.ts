@@ -1,12 +1,16 @@
 import { el } from './dom';
 import { state, forViewport } from './state';
-import { setZoomIcon } from './zoom';
 
 const CLOSE_MS = { mobile: 100, desktop: 300 };
 
+// Кнопка слева вверху нужна только чтобы закрыть открытое, поэтому в остальное
+// время её не видно. Вызывают detail.ts и info.ts после открытия панели.
+export function setBackBtn(): void {
+  const open = Boolean(state.openCode || state.openInfo);
+  el.backBtn.dataset.state = open ? 'back' : 'menu';
+}
+
 // Отъезд камеры и скрытие открытой панели, общий для карточки и info.
-// Возвращает true, если что-то было открыто, — по этому признаку кнопка
-// в шапке решает, закрывать или менять масштаб.
 export function closePanels(): boolean {
   if (!state.openCode && !state.openInfo) return false;
 
@@ -36,6 +40,6 @@ export function closePanels(): boolean {
   }, closeMs);
 
   el.scroll.style.overflowY = '';
-  setZoomIcon();
+  setBackBtn();
   return true;
 }

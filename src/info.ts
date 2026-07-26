@@ -1,7 +1,7 @@
 import { INFO } from './products';
 import { el } from './dom';
 import { state } from './state';
-import { setZoomIcon } from './zoom';
+import { setBackBtn } from './panels';
 import type { InfoKey } from './products';
 
 // ключ приходит из data-info в разметке, поэтому сверяем со списком страниц
@@ -19,5 +19,5 @@ export function openInfo(key: string): void {
 
   el.info.setAttribute('aria-hidden', 'false');
   el.scroll.style.overflowY = 'hidden';
-  setZoomIcon();
+  setBackBtn();
 }
