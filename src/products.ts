@@ -59,7 +59,7 @@ export const PRODUCTS: Product[] = [
   {
     // draga-pendant.jpg лежит в папке, но не в слайдере: это версия-кулон,
     // отдельное изделие, если решишь его выставить
-    code: 'BR-03', name: 'ДРАГА', cats: ['band'],
+    code: 'BR-03', name: 'ЭВЕР', cats: ['band'],
     photos: [
       'assets/items/draga/draga-front.jpg',
       'assets/items/draga/draga-top.jpg',
@@ -69,7 +69,7 @@ export const PRODUCTS: Product[] = [
     note: '',
   },
   {
-    code: 'BR-04', name: 'ЗВЕЗДА', cats: ['figure'],
+    code: 'BR-04', name: 'СЕМИКОНЕЧНАЯ ЗВЕЗДА', cats: ['figure'],
     photos: ['assets/items/zvezda/zvezda-front.jpg'],
     material: 'ЛАТУНЬ', sizes: '', price: null,
     note: '',
