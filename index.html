@@ -9,10 +9,12 @@
   <meta property="og:description" content="Кольца ручной работы из латуни">
   <meta property="og:type" content="website">
 
+  <meta name="robots" content="noai, noimageai">
+  <meta name="copyright" content="© 2026 Иван Баширов (BRASS), все права защищены">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <main>
@@ -48,8 +50,10 @@
           <li><a href="#" data-info="care">Уход за латунью</a></li>
           <li><a href="#" data-info="sizes">Размеры</a></li>
           <li><a href="#" data-info="delivery">Доставка</a></li>
+          <li><a href="#" data-info="rights">Права</a></li>
           <li><a id="footer-contact" href="#" target="_blank" rel="noopener">Контакты</a></li>
         </ul>
+        <p class="footer-copy">© 2026 BRASS. Фотографии и тексты защищены авторским правом.</p>
       </footer>
     </div>
 
@@ -77,7 +81,6 @@
     <p style="padding:2rem;text-align:center">Для просмотра каталога нужен JavaScript.</p>
   </noscript>
 
-  <!-- точка входа; остальные файлы из js/ подтягиваются импортами -->
-  <script type="module" src="js/app.js"></script>
+  <script type="module" src="/src/main.ts"></script>
 </body>
 </html>

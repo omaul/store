@@ -1,15 +1,13 @@
-// Возврат к сетке: отъезд камеры и скрытие открытой панели.
-// Общий для карточки изделия и текстовых страниц из футера.
-
-import { el } from './dom.js';
-import { state, forViewport } from './state.js';
-import { setZoomIcon } from './zoom.js';
+import { el } from './dom';
+import { state, forViewport } from './state';
+import { setZoomIcon } from './zoom';
 
 const CLOSE_MS = { mobile: 100, desktop: 300 };
 
-// Возвращает true, если что-то действительно было открыто, —
-// по этому признаку кнопка в шапке решает, закрывать или менять масштаб.
-export function closePanels() {
+// Отъезд камеры и скрытие открытой панели, общий для карточки и info.
+// Возвращает true, если что-то было открыто, — по этому признаку кнопка
+// в шапке решает, закрывать или менять масштаб.
+export function closePanels(): boolean {
   if (!state.openCode && !state.openInfo) return false;
 
   state.openCode = null;
@@ -32,8 +30,8 @@ export function closePanels() {
   }
 
   // origin возвращаем в центр только после отъезда, иначе сетку дёрнет
-  clearTimeout(state.resetOriginTimer);
-  state.resetOriginTimer = setTimeout(() => {
+  window.clearTimeout(state.resetOriginTimer);
+  state.resetOriginTimer = window.setTimeout(() => {
     if (!state.openCode) el.grid.style.transformOrigin = '50% 50%';
   }, closeMs);
 

@@ -1,24 +1,23 @@
-// Открытие изделия — это наезд камеры, а не новый экран.
-//
-// Отдельной картинки нет: сетка целиком сдвигается и масштабируется так,
-// чтобы нажатый тайл оказался по центру экрана. Тот же <img>, что и был, —
-// поэтому ничего не перерисовывается и не мигает.
-// Отъезд общий для всех панелей и живёт в panels.js.
+// Открытие изделия — наезд камеры, а не новый экран: сетка целиком сдвигается
+// и масштабируется так, чтобы нажатый тайл оказался по центру. Увеличивается
+// тот же <img>, поэтому фото не перерисовывается и не мигает.
+// Отъезд общий для всех панелей и живёт в panels.ts.
 
-import { PRODUCTS } from './products.js';
-import { el } from './dom.js';
-import { state, forViewport } from './state.js';
-import { contactHref } from './contact.js';
-import { setZoomIcon } from './zoom.js';
+import { PRODUCTS } from './products';
+import { el } from './dom';
+import { state, forViewport } from './state';
+import { contactHref } from './contact';
+import { setZoomIcon } from './zoom';
+import type { Product } from './types';
 
 const OPEN_MS = { mobile: 200, desktop: 300 };
 const MAX_SIZE = 560; // до какой ширины разгоняется фото при открытии
 
-function fillDetail(p) {
+function fillDetail(p: Product): void {
   el.detailCode.textContent = p.code;
   el.detailName.textContent = p.name;
 
-  const specs = [];
+  const specs: [string, string][] = [];
   if (p.material) specs.push(['МАТЕРИАЛ', p.material]);
   if (p.sizes) specs.push(['РАЗМЕР', p.sizes]);
 
@@ -32,22 +31,21 @@ function fillDetail(p) {
     })
   );
 
-  el.detailNote.textContent = p.note || '';
+  el.detailNote.textContent = p.note ?? '';
   el.detailNote.hidden = !p.note;
 
   el.detailPrice.textContent =
-    typeof p.price === 'number'
-      ? p.price.toLocaleString('ru-RU') + ' ₽'
-      : 'ЦЕНА ПО ЗАПРОСУ';
+    p.price === null ? 'ЦЕНА ПО ЗАПРОСУ' : p.price.toLocaleString('ru-RU') + ' ₽';
 
   el.detailCta.href = contactHref(p);
 }
 
-export function openDetail(code, tile) {
+export function openDetail(code: string, tile: HTMLElement): void {
   const p = PRODUCTS.find((x) => x.code === code);
-  if (!p) return;
+  const square = tile.querySelector('.square');
+  if (!p || !square) return;
 
-  clearTimeout(state.resetOriginTimer);
+  window.clearTimeout(state.resetOriginTimer);
   state.openCode = code;
   state.activeTile = tile;
 
@@ -63,13 +61,13 @@ export function openDetail(code, tile) {
   const availW = Math.min(MAX_SIZE, window.innerWidth - 32);
   const size = Math.max(120, Math.min(availW, availH));
 
-  const sr = tile.querySelector('.square').getBoundingClientRect();
+  const sr = square.getBoundingClientRect();
   const gr = el.grid.getBoundingClientRect();
 
   const cx = sr.left + sr.width / 2;
   const cy = sr.top + sr.height / 2;
 
-  // точка, вокруг которой масштабируем, — центр нажатого фото
+  // масштабируем вокруг центра нажатого фото
   el.grid.style.transformOrigin =
     (cx - gr.left).toFixed(2) + 'px ' + (cy - gr.top).toFixed(2) + 'px';
 

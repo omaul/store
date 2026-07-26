@@ -1,23 +1,22 @@
-// Кнопка слева вверху: переключает число колонок, а на максимальном
-// приближении превращается в шеврон «назад».
+import { el } from './dom';
+import { state, ZOOM } from './state';
 
-import { el } from './dom.js';
-import { state, ZOOM } from './state.js';
-
-export function applyZoom() {
+export function applyZoom(): void {
   const cols = state.levels[state.index];
-  el.grid.style.setProperty('--col-count', cols);
+  el.grid.style.setProperty('--col-count', String(cols));
   el.grid.classList.toggle('single-col', cols === 1);
 }
 
-export function setZoomIcon() {
+// Кнопка слева вверху служит и зумом, и «назад»: шеврон показываем, когда
+// что-то открыто или дальше приближать уже некуда.
+export function setZoomIcon(): void {
   const atMax = state.index === state.levels.length - 1;
   const back = Boolean(state.openCode || state.openInfo) || atMax;
   el.zoomBtn.dataset.state = back ? 'back' : 'menu';
 }
 
 // Ходим по уровням туда-обратно: доехав до края, разворачиваемся.
-export function stepZoom() {
+export function stepZoom(): void {
   const next = state.index + state.direction;
 
   if (next < 0 || next > state.levels.length - 1) return;
@@ -30,9 +29,8 @@ export function stepZoom() {
   setZoomIcon();
 }
 
-// На телефоне и десктопе наборы масштабов разные, поэтому при смене
-// ширины экрана начинаем заново с самого мелкого.
-export function syncViewport(isMobile) {
+// Наборы масштабов у телефона и десктопа разные — начинаем с самого мелкого.
+export function syncViewport(isMobile: boolean): void {
   if (isMobile === state.isMobile) return;
 
   state.isMobile = isMobile;

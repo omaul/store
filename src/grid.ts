@@ -1,15 +1,15 @@
-// Сборка сетки изделий под текущий фильтр.
+import { PRODUCTS } from './products';
+import { el } from './dom';
+import { state } from './state';
+import type { Product } from './types';
 
-import { PRODUCTS } from './products.js';
-import { el } from './dom.js';
-import { state } from './state.js';
-
-function visibleProducts() {
-  if (state.filter === 'all') return PRODUCTS;
-  return PRODUCTS.filter((p) => p.cats && p.cats.includes(state.filter));
+function visibleProducts(): Product[] {
+  const filter = state.filter;
+  if (filter === 'all') return PRODUCTS;
+  return PRODUCTS.filter((p) => p.cats.includes(filter));
 }
 
-function createTile(p) {
+function createTile(p: Product): HTMLButtonElement {
   const img = document.createElement('img');
   img.src = p.img;
   img.alt = p.code;
@@ -38,6 +38,6 @@ function createTile(p) {
   return tile;
 }
 
-export function renderGrid() {
+export function renderGrid(): void {
   el.grid.replaceChildren(...visibleProducts().map(createTile));
 }

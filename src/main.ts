@@ -1,28 +1,27 @@
-// Точка входа: подписки на события и первый рендер.
-// Логика разнесена по соседним модулям, содержимое сайта — в js/products.js.
+import './style.css';
 
-import { CONTACT } from './products.js';
-import { el } from './dom.js';
-import { state, MOBILE_Q } from './state.js';
-import { contactHref } from './contact.js';
-import { renderGrid } from './grid.js';
-import { applyZoom, setZoomIcon, stepZoom, syncViewport } from './zoom.js';
-import { renderFilters, setFilter } from './filters.js';
-import { openDetail } from './detail.js';
-import { openInfo } from './info.js';
-import { closePanels } from './panels.js';
+import { CONTACT } from './products';
+import { el } from './dom';
+import { state, MOBILE_Q } from './state';
+import { contactHref } from './contact';
+import { renderGrid } from './grid';
+import { applyZoom, setZoomIcon, stepZoom, syncViewport } from './zoom';
+import { renderFilters, setFilter } from './filters';
+import { openDetail } from './detail';
+import { openInfo } from './info';
+import { closePanels } from './panels';
 
 // ── события ────────────────────────────────────────────────
 
-// одна кнопка на две роли: пока что-то открыто — «назад», иначе масштаб
 el.zoomBtn.addEventListener('click', () => {
   if (closePanels()) return;
   stepZoom();
 });
 
 el.filters.addEventListener('click', (e) => {
-  const b = e.target.closest('.filter-btn');
-  if (b) setFilter(b.dataset.id);
+  if (!(e.target instanceof Element)) return;
+  const b = e.target.closest<HTMLButtonElement>('.filter-btn');
+  if (b?.dataset.id) setFilter(b.dataset.id);
 });
 
 el.grid.addEventListener('click', (e) => {
@@ -31,8 +30,9 @@ el.grid.addEventListener('click', (e) => {
     closePanels();
     return;
   }
-  const tile = e.target.closest('.product-item');
-  if (tile) openDetail(tile.dataset.code, tile);
+  if (!(e.target instanceof Element)) return;
+  const tile = e.target.closest<HTMLElement>('.product-item');
+  if (tile?.dataset.code) openDetail(tile.dataset.code, tile);
 });
 
 el.info.addEventListener('click', () => {
@@ -40,8 +40,9 @@ el.info.addEventListener('click', () => {
 });
 
 el.footer.addEventListener('click', (e) => {
-  const a = e.target.closest('a[data-info]');
-  if (!a) return;
+  if (!(e.target instanceof Element)) return;
+  const a = e.target.closest<HTMLAnchorElement>('a[data-info]');
+  if (!a?.dataset.info) return;
   e.preventDefault();
   openInfo(a.dataset.info);
 });

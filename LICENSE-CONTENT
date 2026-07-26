@@ -1,0 +1,34 @@
+Все права защищены. All rights reserved.
+
+Copyright (c) 2026 Иван Баширов / Ivan Bashirov, мастерская BRASS
+
+Эти условия относятся к содержимому сайта, но не к его коду: код под лицензией
+MIT, см. файл LICENSE.
+
+Содержимым считаются:
+— фотографии в public/assets/;
+— тексты в src/products.ts: названия и описания изделий, страницы
+  «О мастерской», «Уход за латунью», «Размеры», «Доставка», «Права»;
+— дизайн самих изделий: форма, пропорции, отделка.
+
+Без предварительного письменного разрешения правообладателя не допускается
+копировать и перепубликовывать эти материалы, в том числе в социальных сетях,
+маркетплейсах и каталогах; использовать их в рекламе, в оформлении товаров и
+услуг; использовать их для обучения, дообучения и оценки моделей машинного
+обучения и для наполнения обучающих наборов данных.
+
+Разрешено без отдельного запроса: смотреть сайт, сохранять фотографии для
+личного некоммерческого просмотра, ссылаться на сайт.
+
+Применимое право — законодательство Российской Федерации (ГК РФ, часть IV).
+
+По вопросам использования — контакты указаны на сайте.
+
+---
+
+These terms cover the site content, not its code: the code is MIT licensed, see
+LICENSE. The photographs in public/assets/, the texts in src/products.ts, and
+the product designs themselves are all rights reserved. Copying, republication,
+commercial use, and use for training or evaluating machine learning models are
+prohibited without prior written permission. Personal, non-commercial viewing
+is permitted. Governed by the law of the Russian Federation.
