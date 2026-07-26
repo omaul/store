@@ -10,6 +10,7 @@ import { openDetail } from './detail';
 import { openInfo } from './info';
 import { closePanels } from './panels';
 import { initGallery, showFrame, consumeSwipe } from './gallery';
+import { initTap, isTap } from './tap';
 import { revealWhenReady } from './boot';
 
 // ── события ────────────────────────────────────────────────
@@ -25,18 +26,24 @@ el.filters.addEventListener('click', (e) => {
 });
 
 el.grid.addEventListener('click', (e) => {
-  // пока изделие открыто, любой клик по сетке отъезжает обратно — кроме клика,
-  // которым закончился свайп по слайдеру
+  // пока изделие открыто, тап по сетке отъезжает обратно — но не движение по
+  // фото: свайп ловит слайдер, а более короткое не должно делать ничего
   if (state.openCode) {
-    if (!consumeSwipe()) closePanels();
+    if (!consumeSwipe() && isTap(e)) closePanels();
     return;
   }
+  if (!isTap(e)) return;
   if (!(e.target instanceof Element)) return;
   const tile = e.target.closest<HTMLElement>('.product-item');
   if (tile?.dataset.code) openDetail(tile.dataset.code, tile);
 });
 
-el.info.addEventListener('click', () => {
+// Панель текста закрывается тапом по фону вокруг текста. По самому тексту — нет:
+// его читают, выделяют и прокручивают, и любое такое нажатие захлопывало страницу.
+// Остаются кнопка слева вверху и Escape.
+el.info.addEventListener('click', (e) => {
+  if (!isTap(e)) return;
+  if (e.target instanceof Element && e.target.closest('.info-body')) return;
   closePanels();
 });
 
@@ -72,6 +79,7 @@ el.contactBtn.href = contactHref(null);
 el.footerContact.href = contactHref(null);
 el.footerContact.textContent = CONTACT.telegram ? 'TELEGRAM' : 'ПОЧТА';
 
+initTap();
 initGallery();
 renderFilters();
 renderGrid();
