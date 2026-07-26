@@ -364,8 +364,12 @@ main:has(.info-panel[aria-hidden='false']) .footer {
 
 /* ── описание изделия ─────────────────────────────────────── */
 /* Появляется под увеличенным фото. Позиция по вертикали ставится из JS —
-   ровно там, где заканчивается наехавший тайл. Анимации нет намеренно:
-   работает только наезд камеры, ничего не проявляется поверх. */
+   ровно там, где заканчивается наехавший тайл.
+   Фон непрозрачный: блок лежит поверх наехавшей сетки, и сквозь него
+   просвечивали приглушённые тайлы вперемешку с текстом. Высоту detail.ts
+   измеряет заранее, поэтому низ блока приходится на низ вьюпорта.
+   Проявляется с задержкой, чтобы не выскакивать поверх ещё едущей камеры.
+   Сдвигать блок при этом нельзя: снизу вылезет полоса сетки. */
 
 .detail {
   position: fixed;
@@ -377,11 +381,20 @@ main:has(.info-panel[aria-hidden='false']) .footer {
   align-items: center;
   gap: 0.4rem;
   padding: 1.25rem 1rem 1.5rem;
+  background: #fff;
   text-align: center;
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 200ms ease-out 200ms;
 }
 
+/* visibility, а не display: none — иначе переход не сработал бы вообще. Но и
+   одной opacity мало: прозрачный блок перехватывал бы клики, а «НАПИСАТЬ»
+   осталась бы в таб-порядке. Гаснет быстрее, чем появляется. */
 .detail[aria-hidden='true'] {
-  display: none;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 120ms ease-in, visibility 0s 120ms;
 }
 
 .detail-code {
@@ -458,10 +471,15 @@ main:has(.info-panel[aria-hidden='false']) .footer {
   overflow-y: auto;
   padding: 0 1rem 2rem;
   background: #fff;
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 200ms ease-out;
 }
 
 .info-panel[aria-hidden='true'] {
-  display: none;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 120ms ease-in, visibility 0s 120ms;
 }
 
 .info-body {
@@ -508,9 +526,11 @@ main:has(.info-panel[aria-hidden='false']) .footer {
     gap: 0.125rem 0.5rem;
   }
 
+  /* наезд камеры на телефоне короче, значит и ждать нужно меньше */
   .detail {
     gap: 0.3rem;
     padding: 1rem 1rem 1.25rem;
+    transition-delay: 130ms;
   }
 
   .detail-note {

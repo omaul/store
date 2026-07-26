@@ -1,17 +1,18 @@
 {
-  "name": "store",
-  "version": "0.0.0",
-  "private": true,
-  "type": "module",
-  "description": "Витрина колец ручной работы из латуни",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc --noEmit && vite build",
-    "preview": "vite preview",
-    "typecheck": "tsc --noEmit"
-  },
-  "dependencies": {
-    "typescript": "^7.0.2",
-    "vite": "^8.1.5"
-  }
+    "name": "store",
+    "version": "0.0.0",
+    "private": true,
+    "type": "module",
+    "description": "Витрина колец ручной работы из латуни",
+    "scripts": {
+        "start": "vite --open",
+        "dev": "vite",
+        "build": "tsc --noEmit && vite build",
+        "preview": "vite preview",
+        "typecheck": "tsc --noEmit"
+    },
+    "devDependencies": {
+        "typescript": "^7.0.2",
+        "vite": "^8.1.5"
+    }
 }
