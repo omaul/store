@@ -1,10 +1,15 @@
 /* ── база ─────────────────────────────────────────────────── */
 
+:root {
+  /* высота шапки; мобильное значение — в медиазапросе внизу.
+     JS берёт её из DOM (nav.offsetHeight), дублировать не нужно. */
+  --nav-h: 6rem;
+}
+
 *,
 *::before,
 *::after {
   box-sizing: border-box;
-  border: none;
 }
 
 html,
@@ -12,8 +17,6 @@ body {
   margin: 0;
   font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco,
     Consolas, 'Liberation Mono', 'Courier New', monospace;
-  font-variant-numeric: normal;
-  font-feature-settings: 'zero' 0;
   font-size: 16px;
   background: #fff;
   color: #000;
@@ -21,6 +24,7 @@ body {
 }
 
 button {
+  border: none;
   font: inherit;
   color: inherit;
   background: none;
@@ -47,33 +51,18 @@ img {
   -webkit-user-drag: none;
 }
 
-.no-scroll-bar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.no-scroll-bar::-webkit-scrollbar {
-  display: none;
-}
-
 /* ── каркас ───────────────────────────────────────────────── */
-
-.fhs {
-  height: 100dvh;
-}
 
 main {
   position: fixed;
   top: 0;
   left: 0;
   display: flex;
+  height: 100dvh;
   width: 100vw;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: flex-start;
   overflow: hidden;
-  background: #fff;
-  color: #000;
 }
 
 nav {
@@ -82,18 +71,16 @@ nav {
   left: 0;
   z-index: 99;
   display: flex;
-  height: 6rem;
-  max-height: 6rem;
+  height: var(--nav-h);
   width: 100%;
   align-items: center;
-  justify-content: flex-start;
   overflow: hidden;
   padding-block: 0.75rem;
   background: #fff;
 }
 
 .nav-placeholder {
-  height: 6rem;
+  height: var(--nav-h);
   width: 100%;
   flex: none;
 }
@@ -116,6 +103,8 @@ nav {
   right: 1rem;
 }
 
+/* Полосу прокрутки убираем: сетка и так занимает весь экран,
+   а бегунок сбоку ломает вид «вырезанных» фото. */
 .scroll-area {
   position: relative;
   display: flex;
@@ -125,6 +114,11 @@ nav {
   overflow-x: hidden;
   overflow-y: auto;
   scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+
+.scroll-area::-webkit-scrollbar {
+  display: none;
 }
 
 /* ── кнопка масштаба (она же «назад») ─────────────────────── */
@@ -188,8 +182,8 @@ nav {
 
 /* ── фильтры ──────────────────────────────────────────────── */
 
+/* padding-inline держит кнопки подальше от зума и конверта в углах шапки */
 .filters {
-  position: relative;
   display: flex;
   height: 100%;
   flex: 1;
@@ -280,16 +274,10 @@ nav {
   }
 }
 
-.image-container {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-}
-
+/* квадратный кадр: фото вписывается в него целиком, не обрезаясь */
 .square {
   position: relative;
   width: 100%;
-  max-width: 100%;
   aspect-ratio: 1;
 }
 
@@ -305,7 +293,6 @@ nav {
   z-index: 10;
   margin: 0;
   width: 100%;
-  max-width: 100%;
   font-size: 1rem;
   text-align: center;
   text-transform: uppercase;
@@ -448,12 +435,12 @@ main:has(.info-panel[aria-hidden='false']) .footer {
 
 .info-panel {
   position: fixed;
-  top: 6rem;
+  top: var(--nav-h);
   left: 0;
   z-index: 95;
   display: flex;
   width: 100%;
-  height: calc(100dvh - 6rem);
+  height: calc(100dvh - var(--nav-h));
   align-items: flex-start;
   justify-content: center;
   overflow-y: auto;
@@ -480,14 +467,13 @@ main:has(.info-panel[aria-hidden='false']) .footer {
 /* ── мобильные ────────────────────────────────────────────── */
 
 @media (max-width: 768px) {
+  :root {
+    --nav-h: 5.5rem;
+  }
+
   .product-grid {
     --col-count: 3;
   }
-
-  /* высота шапки продублирована в js/app.js → NAV_H.mobile */
-  nav { height: 5.5rem; max-height: 5.5rem; }
-  .nav-placeholder { height: 5.5rem; }
-  .info-panel { top: 5.5rem; height: calc(100dvh - 5.5rem); }
 
   .nav-left { left: 0.5rem; }
   .nav-right { right: 0.5rem; }

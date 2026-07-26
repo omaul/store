@@ -4,15 +4,18 @@
 (function () {
   'use strict';
 
-  var MOBILE_Q = window.matchMedia('(max-width: 768px)');
+  const MOBILE_Q = window.matchMedia('(max-width: 768px)');
 
   // Варианты числа колонок: индекс 0 — самый мелкий масштаб.
-  var ZOOM = { mobile: [3, 2, 1], desktop: [6, 3] };
+  const ZOOM = { mobile: [3, 2, 1], desktop: [6, 3] };
 
-  var NAV_H = { mobile: 88, desktop: 96 }; // высота шапки, как на референсе
-  var MAX_SIZE = 560; // до какой ширины разгоняется фото при открытии
+  // Длительность наезда камеры, мс. На телефоне отъезд быстрее наезда.
+  const OPEN_MS = { mobile: 200, desktop: 300 };
+  const CLOSE_MS = { mobile: 100, desktop: 300 };
 
-  var state = {
+  const MAX_SIZE = 560; // до какой ширины разгоняется фото при открытии
+
+  const state = {
     isMobile: MOBILE_Q.matches,
     levels: MOBILE_Q.matches ? ZOOM.mobile : ZOOM.desktop,
     index: 0,
@@ -24,20 +27,30 @@
     resetOriginTimer: 0,
   };
 
-  var el = {
+  const el = {
     nav: document.getElementById('nav'),
     zoomBtn: document.getElementById('zoom-btn'),
     filters: document.getElementById('filters'),
     scroll: document.querySelector('.scroll-area'),
     grid: document.getElementById('grid'),
-    detail: document.getElementById('detail'),
-    info: document.getElementById('info'),
+    footer: document.querySelector('.footer'),
     contactBtn: document.getElementById('contact-btn'),
     footerContact: document.getElementById('footer-contact'),
+    detail: document.getElementById('detail'),
+    detailCode: document.getElementById('detail-code'),
+    detailName: document.getElementById('detail-name'),
+    detailSpecs: document.getElementById('detail-specs'),
+    detailNote: document.getElementById('detail-note'),
+    detailPrice: document.getElementById('detail-price'),
+    detailCta: document.getElementById('detail-cta'),
+    info: document.getElementById('info'),
+    infoTitle: document.getElementById('info-title'),
+    infoText: document.getElementById('info-text'),
   };
 
-  function navH() {
-    return state.isMobile ? NAV_H.mobile : NAV_H.desktop;
+  // значение из пары { mobile, desktop } под текущую ширину экрана
+  function forViewport(pair) {
+    return state.isMobile ? pair.mobile : pair.desktop;
   }
 
   // ── контакты ───────────────────────────────────────────────
@@ -45,7 +58,9 @@
   function contactHref(product) {
     if (CONTACT.telegram) return CONTACT.telegram;
     if (!CONTACT.email) return '#';
-    var subject = product ? '?subject=' + encodeURIComponent(product.code + ' ' + product.name) : '';
+    const subject = product
+      ? '?subject=' + encodeURIComponent(product.code + ' ' + product.name)
+      : '';
     return 'mailto:' + CONTACT.email + subject;
   }
 
@@ -53,48 +68,57 @@
 
   function visibleProducts() {
     if (state.filter === 'all') return PRODUCTS;
-    return PRODUCTS.filter(function (p) {
-      return p.cats && p.cats.indexOf(state.filter) !== -1;
-    });
+    return PRODUCTS.filter((p) => p.cats && p.cats.includes(state.filter));
+  }
+
+  function createTile(p) {
+    const img = document.createElement('img');
+    img.src = p.img;
+    img.alt = p.code;
+    img.loading = 'lazy';
+    img.decoding = 'async';
+
+    const square = document.createElement('div');
+    square.className = 'square';
+    square.append(img);
+
+    const label = document.createElement('p');
+    label.className = 'product-label';
+    label.textContent = p.code;
+
+    const image = document.createElement('div');
+    image.className = 'product-image';
+    image.append(square, label);
+
+    const tile = document.createElement('button');
+    tile.className = 'product-item';
+    tile.type = 'button';
+    tile.dataset.code = p.code;
+    tile.setAttribute('aria-label', 'Открыть ' + p.code);
+    tile.append(image);
+
+    return tile;
   }
 
   function renderGrid() {
-    var frag = document.createDocumentFragment();
-
-    visibleProducts().forEach(function (p) {
-      var btn = document.createElement('button');
-      btn.className = 'product-item';
-      btn.type = 'button';
-      btn.dataset.code = p.code;
-      btn.setAttribute('aria-label', 'Открыть ' + p.code);
-
-      btn.innerHTML =
-        '<div class="product-image">' +
-          '<div class="image-container"><div class="square">' +
-            '<img src="' + p.img + '" alt="' + p.code + '" loading="lazy" decoding="async">' +
-          '</div></div>' +
-          '<p class="product-label">' + p.code + '</p>' +
-        '</div>';
-
-      frag.appendChild(btn);
-    });
-
-    el.grid.replaceChildren(frag);
+    el.grid.replaceChildren(...visibleProducts().map(createTile));
   }
 
   function applyZoom() {
-    el.grid.style.setProperty('--col-count', state.levels[state.index]);
-    el.grid.classList.toggle('single-col', state.levels[state.index] === 1);
+    const cols = state.levels[state.index];
+    el.grid.style.setProperty('--col-count', cols);
+    el.grid.classList.toggle('single-col', cols === 1);
   }
 
   function setZoomIcon() {
     // на максимальном приближении кнопка становится «назад», как на референсе
-    var atMax = state.index === state.levels.length - 1;
-    el.zoomBtn.dataset.state = state.openCode || state.openInfo ? 'back' : atMax ? 'back' : 'menu';
+    const atMax = state.index === state.levels.length - 1;
+    const back = Boolean(state.openCode || state.openInfo) || atMax;
+    el.zoomBtn.dataset.state = back ? 'back' : 'menu';
   }
 
   function stepZoom() {
-    var next = state.index + state.direction;
+    const next = state.index + state.direction;
 
     if (next < 0 || next > state.levels.length - 1) return;
     state.index = next;
@@ -109,19 +133,17 @@
   // ── фильтры ────────────────────────────────────────────────
 
   function renderFilters() {
-    var frag = document.createDocumentFragment();
-
-    FILTERS.forEach(function (f) {
-      var b = document.createElement('button');
-      b.className = 'filter-btn';
-      b.type = 'button';
-      b.textContent = f.label;
-      b.dataset.id = f.id;
-      b.setAttribute('aria-pressed', String(f.id === state.filter));
-      frag.appendChild(b);
-    });
-
-    el.filters.replaceChildren(frag);
+    el.filters.replaceChildren(
+      ...FILTERS.map((f) => {
+        const b = document.createElement('button');
+        b.className = 'filter-btn';
+        b.type = 'button';
+        b.textContent = f.label;
+        b.dataset.id = f.id;
+        b.setAttribute('aria-pressed', String(f.id === state.filter));
+        return b;
+      })
+    );
   }
 
   function setFilter(id) {
@@ -129,9 +151,9 @@
     closePanels();
     state.filter = id;
 
-    Array.prototype.forEach.call(el.filters.children, function (b) {
+    for (const b of el.filters.children) {
       b.setAttribute('aria-pressed', String(b.dataset.id === id));
-    });
+    }
 
     renderGrid();
   }
@@ -143,7 +165,7 @@
   // поэтому ничего не перерисовывается и не мигает.
 
   function openDetail(code, tile) {
-    var p = PRODUCTS.filter(function (x) { return x.code === code; })[0];
+    const p = PRODUCTS.find((x) => x.code === code);
     if (!p) return;
 
     clearTimeout(state.resetOriginTimer);
@@ -155,25 +177,24 @@
     // высоту описания меряем заранее, чтобы отвести под него место
     el.detail.style.top = '-9999px';
     el.detail.setAttribute('aria-hidden', 'false');
-    var infoH = el.detail.offsetHeight;
+    const infoH = el.detail.offsetHeight;
 
-    var top = navH();
-    var availH = Math.max(160, window.innerHeight - top - infoH);
-    var availW = Math.min(MAX_SIZE, window.innerWidth - 32);
-    var size = Math.max(120, Math.min(availW, availH));
+    const top = el.nav.offsetHeight;
+    const availH = Math.max(160, window.innerHeight - top - infoH);
+    const availW = Math.min(MAX_SIZE, window.innerWidth - 32);
+    const size = Math.max(120, Math.min(availW, availH));
 
-    var square = tile.querySelector('.square');
-    var sr = square.getBoundingClientRect();
-    var gr = el.grid.getBoundingClientRect();
+    const sr = tile.querySelector('.square').getBoundingClientRect();
+    const gr = el.grid.getBoundingClientRect();
 
-    var cx = sr.left + sr.width / 2;
-    var cy = sr.top + sr.height / 2;
+    const cx = sr.left + sr.width / 2;
+    const cy = sr.top + sr.height / 2;
 
     // точка, вокруг которой масштабируем, — центр нажатого фото
     el.grid.style.transformOrigin =
       (cx - gr.left).toFixed(2) + 'px ' + (cy - gr.top).toFixed(2) + 'px';
 
-    el.grid.style.setProperty('--duration', (state.isMobile ? 200 : 300) + 'ms');
+    el.grid.style.setProperty('--duration', forViewport(OPEN_MS) + 'ms');
     el.grid.style.setProperty('--scale', String(size / sr.width));
     el.grid.style.setProperty('--tx', (window.innerWidth / 2 - cx).toFixed(2) + 'px');
     el.grid.style.setProperty('--ty', (top + availH / 2 - cy).toFixed(2) + 'px');
@@ -183,38 +204,47 @@
     tile.classList.add('is-active');
 
     el.scroll.style.overflowY = 'hidden';
-    el.detail.style.top = (top + availH) + 'px';
+    el.detail.style.top = top + availH + 'px';
 
     setZoomIcon();
   }
 
   function fillDetail(p) {
-    document.getElementById('detail-code').textContent = p.code;
-    document.getElementById('detail-name').textContent = p.name;
+    el.detailCode.textContent = p.code;
+    el.detailName.textContent = p.name;
 
-    document.getElementById('detail-specs').innerHTML =
-      (p.material ? '<dt>МАТЕРИАЛ</dt><dd>' + p.material + '</dd>' : '') +
-      (p.sizes ? '<dt>РАЗМЕР</dt><dd>' + p.sizes + '</dd>' : '');
+    const specs = [];
+    if (p.material) specs.push(['МАТЕРИАЛ', p.material]);
+    if (p.sizes) specs.push(['РАЗМЕР', p.sizes]);
 
-    var note = document.getElementById('detail-note');
-    note.textContent = p.note || '';
-    note.hidden = !p.note;
+    el.detailSpecs.replaceChildren(
+      ...specs.flatMap(([term, value]) => {
+        const dt = document.createElement('dt');
+        dt.textContent = term;
+        const dd = document.createElement('dd');
+        dd.textContent = value;
+        return [dt, dd];
+      })
+    );
 
-    document.getElementById('detail-price').textContent =
+    el.detailNote.textContent = p.note || '';
+    el.detailNote.hidden = !p.note;
+
+    el.detailPrice.textContent =
       typeof p.price === 'number'
         ? p.price.toLocaleString('ru-RU') + ' ₽'
         : 'ЦЕНА ПО ЗАПРОСУ';
 
-    document.getElementById('detail-cta').href = contactHref(p);
+    el.detailCta.href = contactHref(p);
   }
 
   function openInfo(key) {
-    var data = INFO[key];
+    const data = INFO[key];
     if (!data) return;
 
     state.openInfo = key;
-    document.getElementById('info-title').textContent = data.title;
-    document.getElementById('info-text').textContent = data.text;
+    el.infoTitle.textContent = data.title;
+    el.infoText.textContent = data.text;
 
     el.info.setAttribute('aria-hidden', 'false');
     el.scroll.style.overflowY = 'hidden';
@@ -230,7 +260,8 @@
     el.detail.setAttribute('aria-hidden', 'true');
     el.info.setAttribute('aria-hidden', 'true');
 
-    el.grid.style.setProperty('--duration', (state.isMobile ? 100 : 300) + 'ms');
+    const closeMs = forViewport(CLOSE_MS);
+    el.grid.style.setProperty('--duration', closeMs + 'ms');
     el.grid.style.setProperty('--scale', '1');
     el.grid.style.setProperty('--tx', '0px');
     el.grid.style.setProperty('--ty', '0px');
@@ -244,9 +275,9 @@
 
     // origin возвращаем в центр только после отъезда, иначе сетку дёрнет
     clearTimeout(state.resetOriginTimer);
-    state.resetOriginTimer = setTimeout(function () {
+    state.resetOriginTimer = setTimeout(() => {
       if (!state.openCode) el.grid.style.transformOrigin = '50% 50%';
-    }, 300);
+    }, closeMs);
 
     el.scroll.style.overflowY = '';
     setZoomIcon();
@@ -255,62 +286,58 @@
 
   // ── события ────────────────────────────────────────────────
 
-  el.zoomBtn.addEventListener('click', function () {
+  el.zoomBtn.addEventListener('click', () => {
     if (closePanels()) return;
     stepZoom();
   });
 
-  el.filters.addEventListener('click', function (e) {
-    var b = e.target.closest('.filter-btn');
+  el.filters.addEventListener('click', (e) => {
+    const b = e.target.closest('.filter-btn');
     if (b) setFilter(b.dataset.id);
   });
 
-  el.grid.addEventListener('click', function (e) {
+  el.grid.addEventListener('click', (e) => {
     // пока изделие открыто, любой клик по сетке отъезжает обратно
     if (state.openCode) {
       closePanels();
       return;
     }
-    var tile = e.target.closest('.product-item');
+    const tile = e.target.closest('.product-item');
     if (tile) openDetail(tile.dataset.code, tile);
   });
 
-  el.info.addEventListener('click', function () {
+  el.info.addEventListener('click', () => {
     closePanels();
   });
 
-  document.querySelector('.footer').addEventListener('click', function (e) {
-    var a = e.target.closest('a[data-info]');
+  el.footer.addEventListener('click', (e) => {
+    const a = e.target.closest('a[data-info]');
     if (!a) return;
     e.preventDefault();
     openInfo(a.dataset.info);
   });
 
-  document.addEventListener('keydown', function (e) {
+  document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closePanels();
   });
 
   // размеры посчитаны от вьюпорта, поэтому при ресайзе просто отъезжаем
-  window.addEventListener('resize', function () {
+  window.addEventListener('resize', () => {
     if (state.openCode) closePanels();
   });
 
   // переключение набора масштабов при смене ширины экрана
-  function syncViewport(e) {
-    var mobile = e.matches;
-    if (mobile === state.isMobile) return;
+  MOBILE_Q.addEventListener('change', (e) => {
+    if (e.matches === state.isMobile) return;
 
-    state.isMobile = mobile;
-    state.levels = mobile ? ZOOM.mobile : ZOOM.desktop;
+    state.isMobile = e.matches;
+    state.levels = e.matches ? ZOOM.mobile : ZOOM.desktop;
     state.index = 0;
     state.direction = 1;
 
     applyZoom();
     setZoomIcon();
-  }
-
-  if (MOBILE_Q.addEventListener) MOBILE_Q.addEventListener('change', syncViewport);
-  else MOBILE_Q.addListener(syncViewport);
+  });
 
   // ── старт ──────────────────────────────────────────────────
 
