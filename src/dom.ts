@@ -30,6 +30,7 @@ export const el = {
   detailCode: need('detail-code'),
   detailName: need('detail-name'),
   detailSpecs: need('detail-specs'),
+  noteBtn: need<HTMLButtonElement>('note-btn'),
   detailNote: need('detail-note'),
   detailPrice: need('detail-price'),
   detailCta: need<HTMLAnchorElement>('detail-cta'),

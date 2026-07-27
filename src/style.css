@@ -483,12 +483,58 @@ main:has(.info-panel[aria-hidden='false']) .footer {
   margin: 0;
 }
 
+.note-btn {
+  margin-top: 0.5rem;
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  color: #343434;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.note-btn::after {
+  content: ' ▾';
+}
+
+.note-btn[aria-expanded='true'] {
+  opacity: 1;
+}
+
+.note-btn[aria-expanded='true']::after {
+  content: ' ▴';
+}
+
+@media (hover: hover) {
+  .note-btn:hover {
+    opacity: 1;
+  }
+}
+
 .detail-note {
   margin: 0.5rem 0 0;
   max-width: 34ch;
   font-size: 0.8125rem;
   line-height: 1.6;
   color: #343434;
+}
+
+/* На десктопе описание стоит сбоку от кадра, а не под ним: панель с ценой
+   остаётся по центру, а текст читается рядом со снимком. Координаты приходят из
+   detail.ts, только он знает, где встал кадр. absolute внутри панели, а не
+   fixed: панели анимируется opacity, а при opacity < 1 она сама становится
+   точкой отсчёта для fixed-потомков, и описание уезжало бы на время перехода. */
+@media (min-width: 769px) {
+  .detail-note {
+    position: absolute;
+    left: var(--note-left);
+    top: var(--note-top);
+    width: var(--note-w);
+    max-width: none;
+    max-height: var(--note-h);
+    margin: 0;
+    overflow-y: auto;
+    text-align: left;
+  }
 }
 
 .detail-price {
@@ -588,14 +634,23 @@ main:has(.info-panel[aria-hidden='false']) .footer {
     gap: 0.125rem 0.5rem;
   }
 
-  /* наезд камеры на телефоне короче, значит и ждать нужно меньше */
+  /* наезд камеры на телефоне короче, значит и ждать нужно меньше.
+     Отступы поджаты: всё, что съедает панель, отнимается у кадра. */
   .detail {
     gap: 0.3rem;
-    padding: 1rem 1rem 1.25rem;
+    padding: 0.75rem 1rem 1rem;
     transition-delay: 130ms;
   }
 
+  .detail-price {
+    margin-top: 0.5rem;
+  }
+
+  /* Описание в потоке панели, кадр под него пересчитывается в detail.ts. Высоту
+     всё равно ограничиваем: иначе длинный текст выдавит цену и «НАПИСАТЬ» за
+     экран, а прокрутки у панели нет. */
   .detail-note {
-    display: none; /* на телефоне под описание места нет */
+    max-height: 25vh;
+    overflow-y: auto;
   }
 }

@@ -6,7 +6,7 @@ import { state, MOBILE_Q } from './state';
 import { contactHref } from './contact';
 import { renderGrid } from './grid';
 import { renderFilters, setFilter } from './filters';
-import { openDetail } from './detail';
+import { openDetail, toggleNote } from './detail';
 import { openInfo } from './info';
 import { closePanels } from './panels';
 import { initGallery, showFrame, consumeSwipe } from './gallery';
@@ -26,10 +26,13 @@ el.filters.addEventListener('click', (e) => {
 });
 
 el.grid.addEventListener('click', (e) => {
-  // пока изделие открыто, тап по сетке отъезжает обратно — но не движение по
-  // фото: свайп ловит слайдер, а более короткое не должно делать ничего
+  // Пока изделие открыто, сетка вокруг работает как фон: тап по ней отъезжает
+  // обратно. По самому кадру — нет, на нём листают, и промах пальцем не должен
+  // захлопывать карточку. Движение тоже не закрывает: свайп ловит слайдер.
   if (state.openCode) {
-    if (!consumeSwipe() && isTap(e)) closePanels();
+    if (consumeSwipe() || !isTap(e)) return;
+    if (e.target instanceof Element && e.target.closest('.product-item.is-active')) return;
+    closePanels();
     return;
   }
   if (!isTap(e)) return;
@@ -41,6 +44,10 @@ el.grid.addEventListener('click', (e) => {
 // Панель текста закрывается тапом по фону вокруг текста. По самому тексту — нет:
 // его читают, выделяют и прокручивают, и любое такое нажатие захлопывало страницу.
 // Остаются кнопка слева вверху и Escape.
+el.noteBtn.addEventListener('click', () => {
+  toggleNote();
+});
+
 el.info.addEventListener('click', (e) => {
   if (!isTap(e)) return;
   if (e.target instanceof Element && e.target.closest('.info-body')) return;
